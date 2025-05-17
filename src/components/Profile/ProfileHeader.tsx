@@ -11,7 +11,7 @@ const ProfileHeader = ({ username, avatarUrl, onAvatarChange }: { username: stri
             <h2 className="text-3xl font-bold tracking-wide">{username || 'User'}</h2>
             <div className="relative">
                 {avatarUrl ? (
-                    <Image src={avatarUrl} className="h-24 w-24 rounded-full object-cover" alt={"avatar"} />
+                    <Image src={avatarUrl} className="h-24 w-24 rounded-full object-cover" alt={"avatar"}  width={96} height={96}/>
                 ) : (
                     <div className="h-24 w-24 rounded-full bg-gray-400 flex items-center justify-center text-white text-xl font-semibold">
                         {username ? username.charAt(0).toUpperCase() : 'U'}

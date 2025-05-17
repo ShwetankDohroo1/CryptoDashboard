@@ -10,7 +10,7 @@ export const getAlerts = async (): Promise<Record<string, CoinAlert>> => {
     return data.success ? data.alerts : {};
 };
 
-export const deleteAlert = async ( coinId: string): Promise<{ success: boolean; error?: string }> => {
+export const deleteAlert = async (coinId: string): Promise<{ success: boolean; error?: string }> => {
     const visitorId = localStorage.getItem("fingerprintId");
     if (!visitorId) return { success: false, error: "No visitorId" };
 
@@ -21,11 +21,17 @@ export const deleteAlert = async ( coinId: string): Promise<{ success: boolean; 
 };
 
 export async function updateAlert(coinId: string, updates: Partial<CoinAlert>) {
+    const visitorId = localStorage.getItem("fingerprintId");
+    if (!visitorId) return { success: false, error: "No visitorId" };
     try {
-        await axios.put(`/api/alerts/${coinId}`, updates);
-        return { success: true };
-    } 
-    catch {
+        const res = await axios.put(
+            `/api/alerts/${coinId}?visitorId=${visitorId}`,
+            updates
+        );
+        return res.data as { success: boolean };
+    } catch (err) {
+        console.error("PUT failed:", err);
         return { success: false, error: "Failed to update alert" };
     }
 }
+

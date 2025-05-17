@@ -34,18 +34,26 @@ const AlertsPage = () => {
             const triggered = checkAndTriggerAlerts(Object.values(coins), alerts);
             if (triggered.length) {
                 const updatedAlerts = { ...alerts };
+
                 for (const coinId of triggered) {
-                    updatedAlerts[coinId].isActive = false;
-                    await updateAlert(coinId, { isActive: false });
+                    const result = await updateAlert(coinId, { isActive: false });
+                    if (result.success) {
+                        updatedAlerts[coinId].isActive = false;
+                    } 
+                    else {
+                        toast.error(`Could not deactivate alert for ${coinId}`);
+                    }
                 }
                 setAlerts(updatedAlerts);
             }
             setIsChecked(true);
         };
+
         if (!isChecked && Object.keys(alerts).length && Object.keys(coins).length) {
             checkAlerts();
         }
     }, [alerts, coins, isChecked]);
+
 
     //to delete alert
     const handleDeleteAlert = async (coinId: string) => {
